@@ -10,6 +10,7 @@ CREATE TABLE restaurant_verifications (
   date            date        NOT NULL,
   party_size      int         NOT NULL,
   status          text        DEFAULT 'pending',
+  manual_approval text,
   notes           text,
   verification_data jsonb,
   created_by      uuid        REFERENCES auth.users(id),
