@@ -7,8 +7,29 @@ export default function Dashboard({ session }) {
   const [filters, setFilters] = useState({ order_id: '', time: '', user_name: '', restaurant_name: '' })
   const [manualApprovals, setManualApprovals] = useState({})
 
-  function handleManualApproval(id, status) {
+  async function handleManualApproval(id, status) {
+    const previousStatus = manualApprovals[id]
+
     setManualApprovals(prev => ({ ...prev, [id]: status }))
+    setOrders(prev =>
+      prev.map(order =>
+        order.id === id ? { ...order, manual_approval: status } : order
+      )
+    )
+
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ manual_approval: status })
+      .eq('id', id)
+      .select('id, manual_approval')
+      .single()
+
+    if (error || !data) {
+      console.error('Update error:', error)
+      alert('Failed to update approval: ' + (error?.message ?? 'No row updated'))
+      setManualApprovals(prev => ({ ...prev, [id]: previousStatus }))
+      fetchOrders()
+    }
   }
 
   useEffect(() => {
@@ -21,8 +42,19 @@ export default function Dashboard({ session }) {
       .from('orders')
       .select('*')
 
-    if (error) console.error('Fetch error:', error)
-    else setOrders(data)
+    if (error) {
+      console.error('Fetch error:', error)
+    } else {
+      setOrders(data)
+      // Initialize the manualApprovals state from the DB data
+      const initialApprovals = {}
+      data.forEach(order => {
+        if (order.manual_approval) {
+          initialApprovals[order.id] = order.manual_approval
+        }
+      })
+      setManualApprovals(initialApprovals)
+    }
     setLoading(false)
   }
 
@@ -142,14 +174,14 @@ export default function Dashboard({ session }) {
                     <td>{statusBadge(row.status)}</td>
                     <td>
                       <button 
-                        className={`action-btn approve-btn ${manualApprovals[row.id] === 'approved' ? 'active' : ''}`}
-                        onClick={() => handleManualApproval(row.id, 'approved')}
+                        className={`action-btn approve-btn ${manualApprovals[row.id] === 'approve' ? 'active' : ''}`}
+                        onClick={() => handleManualApproval(row.id, 'approve')}
                       >
                         Approve
                       </button>
                       <button 
-                        className={`action-btn decline-btn ${manualApprovals[row.id] === 'declined' ? 'active' : ''}`}
-                        onClick={() => handleManualApproval(row.id, 'declined')}
+                        className={`action-btn decline-btn ${manualApprovals[row.id] === 'decline' ? 'active' : ''}`}
+                        onClick={() => handleManualApproval(row.id, 'decline')}
                       >
                         Decline
                       </button>
