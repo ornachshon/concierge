@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 
-export default function Dashboard({ session }) {
+export default function Dashboard() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({ order_id: '', time: '', user_name: '', restaurant_name: '' })
@@ -58,12 +58,6 @@ export default function Dashboard({ session }) {
     setLoading(false)
   }
 
-
-
-  async function handleLogout() {
-    await supabase.auth.signOut()
-  }
-
   function statusBadge(status) {
     const colors = {
       pending: '#f59e0b',
@@ -102,21 +96,10 @@ export default function Dashboard({ session }) {
   })
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <h1>🍽️ Restaurant Verifications</h1>
-        <div className="header-right">
-          <span className="user-email">{session.user.email}</span>
-          <button className="logout-btn" onClick={handleLogout}>Log out</button>
-        </div>
-      </header>
-
-
-
-      <section className="table-section">
-        <h2>All Verifications</h2>
-        
-        <div className="filters-container">
+    <section className="table-section">
+      <h2>All Verifications</h2>
+      
+      <div className="filters-container">
           <input 
             type="number" 
             placeholder="Filter by Order ID" 
@@ -193,6 +176,5 @@ export default function Dashboard({ session }) {
           </div>
         )}
       </section>
-    </div>
   )
 }
