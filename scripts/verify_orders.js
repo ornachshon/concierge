@@ -55,7 +55,7 @@ function buildOrderDateTime(date, time) {
 async function insertOrderReview({
   order,
   status,
-  description,
+  agentAnswer,
   rating,
 }) {
   if (order.order_id == null) {
@@ -68,7 +68,7 @@ async function insertOrderReview({
     restaurant_id: rating?.id ?? null,
     restaurant_name: order.restaurant_name,
     status,
-    description,
+    agent_answer: agentAnswer,
     google_rating: rating?.google_rating ?? null,
     google_review_count: rating?.google_review_count ?? null,
     order_date_time: buildOrderDateTime(order.date, order.time),
@@ -185,7 +185,7 @@ async function processOrder(order, counts) {
       status,
       notes,
     })
-    await insertOrderReview({ order, status, description: notes, rating: null })
+    await insertOrderReview({ order, status, agentAnswer: notes, rating: null })
     counts.needs_review += 1
     console.log(`⚠️ ${order.restaurant_name} → needs_review (no rating found)`)
     return
@@ -197,7 +197,7 @@ async function processOrder(order, counts) {
     const { status, notes } = parseGeminiResponse(groqText)
 
     await updateOrder({ id: order.id, status, notes })
-    await insertOrderReview({ order, status, description: notes, rating })
+    await insertOrderReview({ order, status, agentAnswer: notes, rating })
     counts[status] += 1
     logResult({
       restaurantName: order.restaurant_name,
@@ -215,7 +215,7 @@ async function processOrder(order, counts) {
       status,
       notes,
     })
-    await insertOrderReview({ order, status, description: notes, rating })
+    await insertOrderReview({ order, status, agentAnswer: notes, rating })
     counts.needs_review += 1
     logResult({
       restaurantName: order.restaurant_name,

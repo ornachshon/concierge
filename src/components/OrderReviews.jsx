@@ -104,7 +104,7 @@ export default function OrderReviews() {
                 <th>Order ID</th>
                 <th>Restaurant Name</th>
                 <th>Status</th>
-                <th>Description</th>
+                <th>Agent Answer</th>
                 <th>Google Rating</th>
                 <th>Review Count</th>
                 <th>Order Date/Time</th>
@@ -117,7 +117,7 @@ export default function OrderReviews() {
                   <td>{row.order_id ?? '—'}</td>
                   <td>{row.restaurant_name}</td>
                   <td>{statusBadge(row.status)}</td>
-                  <td>{row.description ?? '—'}</td>
+                  <td>{row.agent_answer ?? '—'}</td>
                   <td>{formatRating(row.google_rating)}</td>
                   <td>{row.google_review_count ?? '—'}</td>
                   <td>{formatDateTime(row.order_date_time)}</td>
