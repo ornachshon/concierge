@@ -30,6 +30,13 @@ export default function AppLayout({ session, activeTab, onTabChange, children })
         >
           Restaurant Ratings
         </button>
+        <button
+          type="button"
+          className={`tab-btn ${activeTab === 'reviews' ? 'active' : ''}`}
+          onClick={() => onTabChange('reviews')}
+        >
+          Order Reviews
+        </button>
       </nav>
 
       {children}

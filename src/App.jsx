@@ -4,6 +4,7 @@ import Login from './components/Login'
 import AppLayout from './components/AppLayout'
 import Dashboard from './components/Dashboard'
 import RestaurantRatings from './components/RestaurantRatings'
+import OrderReviews from './components/OrderReviews'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -33,7 +34,9 @@ function App() {
 
   return session ? (
     <AppLayout session={session} activeTab={activeTab} onTabChange={setActiveTab}>
-      {activeTab === 'orders' ? <Dashboard /> : <RestaurantRatings />}
+      {activeTab === 'orders' && <Dashboard />}
+      {activeTab === 'ratings' && <RestaurantRatings />}
+      {activeTab === 'reviews' && <OrderReviews />}
     </AppLayout>
   ) : (
     <Login />

@@ -277,6 +277,21 @@ body {
   border-color: #3b82f6;
 }
 
+.filters-container select {
+  flex: 1 1 140px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.filters-container select:focus {
+  border-color: #3b82f6;
+}
+
 .table-wrapper {
   overflow-x: auto;
 }

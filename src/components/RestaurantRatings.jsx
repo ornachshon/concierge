@@ -17,7 +17,7 @@ function formatFetchedAt(value) {
 export default function RestaurantRatings() {
   const [ratings, setRatings] = useState([])
   const [loading, setLoading] = useState(true)
-  const [filters, setFilters] = useState({ restaurant_name: '', min_rating: '' })
+  const [filters, setFilters] = useState({ restaurant_name: '', min_rating: '', fetched_at: '' })
 
   useEffect(() => {
     fetchRatings()
@@ -51,6 +51,16 @@ export default function RestaurantRatings() {
         return false
       }
     }
+    if (filters.fetched_at) {
+      if (!row.fetched_at) return false
+      const rowDate = new Date(row.fetched_at)
+      const rowDateStr = [
+        rowDate.getFullYear(),
+        String(rowDate.getMonth() + 1).padStart(2, '0'),
+        String(rowDate.getDate()).padStart(2, '0'),
+      ].join('-')
+      if (rowDateStr !== filters.fetched_at) return false
+    }
     return true
   })
 
@@ -73,6 +83,12 @@ export default function RestaurantRatings() {
           placeholder="Min Rating"
           value={filters.min_rating}
           onChange={e => setFilters({ ...filters, min_rating: e.target.value })}
+        />
+        <input
+          type="date"
+          aria-label="Filter by Fetched At"
+          value={filters.fetched_at}
+          onChange={e => setFilters({ ...filters, fetched_at: e.target.value })}
         />
       </div>
 
